@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String      @id @default(cuid()) // Unique identifier
+  email         String      @unique             // User's email
+  password      String                           // User's hashed password
+  createdAt     DateTime    @default(now())      // Timestamp for account creation
+  updatedAt     DateTime    @updatedAt           // Auto-updated timestamp
+  
+  // Relations
+  foodEntries   FoodEntry[] // One-to-many relationship with FoodEntry
+}
+
+model FoodEntry {
+  id           String   @id @default(cuid())   // Unique identifier
+  userId       String                              // User who logged the entry
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Entry details
+  mealName     String?                           // Optional: Name of the meal (e.g., "Lunch")
+  units        String                            // Measurement unit (e.g., "oz", "cups", "each")
+  servingSize  Float                            
+  amount       Float                             // Quantity eaten
+  savedAt      DateTime @default(now())          // Timestamp when the entry was saved
+  date         DateTime                          // Date of the entry (e.g., 1/22/25)
+
+  
+  // Nutrition breakdown
+  calories     Float?                            // Total calories (optional)
+  carbs        Float?                            // Carbohydrates (optional)
+  protein      Float?                            // Protein (optional)
+  fat          Float?                            // Fat (optional)
+  fiber        Float?                            // Fiber (optional)
+  sugar        Float?                            // Sugar (optional)
+  sodium       Float?                            // Sodium (optional)
+
+  // Nutrition breakdown calculated
+  CalcCalories     Float?                            // Total calories (optional)
+  CalcCarbs        Float?                            // Carbohydrates (optional)
+  CalcProtein      Float?                            // Protein (optional)
+  CalcFat          Float?                            // Fat (optional)
+  CalcFiber        Float?                            // Fiber (optional)
+  CalcSugar        Float?                            // Sugar (optional)
+  CalcSodium       Float?                            // Sodium (optional)
+}
