@@ -16,7 +16,7 @@ export default function WelcomePage() {
       <Link href="/authen/login">
             <p className="mb-2">Login</p>
           </Link>
-        <hr className="my-5 border-t-4 border-achieve-seagreen" />
+        <hr className="my-5 border-t-4 border-achieve-green" />
         <Link href="/authen/createaccount">
             <p className="mb-2 ">Create Account</p>
           </Link>

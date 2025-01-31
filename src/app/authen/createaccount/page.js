@@ -2,14 +2,22 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-
+import { useRouter } from 'next/navigation';
 
 export default function CreateAccount() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const router = useRouter();
 
   const handleSignup = async () => {
+    // Validate email and password
+    if (!email || !password) {
+      setError('Please enter both email and password.');
+      return; // Stop the function execution if validation fails
+    }
+
     try {
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
@@ -17,18 +25,32 @@ export default function CreateAccount() {
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
+        // If the response is not OK, display the error message
         throw new Error(data.error || 'Signup failed');
       }
-      alert('Signup successful! You can now log in.');
+
+      // Show success message and redirect to login
+      setSuccessMessage('Account created successfully! You can now log in.');
+      setTimeout(() => {
+        setSuccessMessage(''); // Clear success message after 5 seconds
+        router.push('/authen/login'); // Redirect to login page
+      }, 5000);
     } catch (err) {
-      setError(err.message);
+      setError(err.message); // Set the error message to display
     }
   };
 
   return (
     <div>
+       {/* Success Message */}
+       {successMessage && (
+        <div className="fixed top-0 left-0 right-0 bg-achieve-green text-white p-4 text-center font-semibold z-50">
+          {successMessage}
+        </div>
+      )}
       {/* Centered Form Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-screen p-4 sm:p-8 md:p-10">
         <h1 className="text-center font-bold mb-4 text-4xl">Create Account</h1>

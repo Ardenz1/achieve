@@ -37,7 +37,9 @@ export default function Login() {
       />
       
       {/* Centered Form Content */}
+     
       <div className="relative z-10 flex flex-col items-center justify-center h-screen p-4 sm:p-8 md:p-10">
+      <h1 className="text-center font-bold mb-4 text-4xl">Login</h1>
         {/* Email Input */}
         <div className="w-full max-w-sm sm:max-w-md mb-4">
           <label className="block text-lg font-medium mb-1">Email</label>

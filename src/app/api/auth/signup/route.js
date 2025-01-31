@@ -1,24 +1,40 @@
+
 import bcrypt from 'bcryptjs';
-import prisma from '@/lib/prisma'; // Assuming you're using Prisma
+import prisma from '@/database/client'; // Correct import path for prisma
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { email, password } = req.body;
+// Handle POST requests
+export async function POST(req) {
+  const { email, password } = await req.json(); // Parse the request body
 
-    try {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = await prisma.user.create({
-        data: {
-          email,
-          password: hashedPassword,
-        },
-      });
+  const existingUser = await prisma.user.findUnique({
+    where: { email },
+  });
 
-      res.status(201).json({ message: 'User created successfully!', user: newUser });
-    } catch (error) {
-      res.status(500).json({ error: 'Error creating user.' });
-    }
-  } else {
-    res.status(405).json({ error: 'Method not allowed.' });
+  if (existingUser) {
+    return new Response(JSON.stringify({ error: 'Email is already in use.' }), {
+      status: 400,
+    });
+  }
+
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+      },
+    });
+
+    // Return the response using Response object
+    return new Response(
+      JSON.stringify({ message: 'User created successfully!', user: newUser }),
+      { status: 201 }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: 'Error creating user.' }),
+      { status: 500 }
+    );
   }
 }
