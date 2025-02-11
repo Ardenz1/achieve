@@ -7,6 +7,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -19,9 +20,18 @@ export default function Login() {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Login failed');
+
+      // Store token in localStorage
       localStorage.setItem('token', data.token);
-      alert('Login successful!');
-      router.push('/home'); // Redirect to the home page
+
+      // Show success message
+      setSuccessMessage('Logging you in!');
+
+      
+      setTimeout(() => {
+        setSuccessMessage('');
+        router.push('/'); 
+      }, 3000); 
     } catch (err) {
       setError(err.message);
     }
@@ -69,6 +79,12 @@ export default function Login() {
           Login
         </button>
         {error && <p>{error}</p>}
+
+        {successMessage && (
+        <div className=" text-green-500 p-4 text-center font-semibold z-50">
+          {successMessage}
+        </div>
+      )}
 
 
         {/* Back Button */}

@@ -18,3 +18,18 @@ export async function getentryById(entry_id) {
     return entry;
   }
   
+  import prisma from '@/database/client';
+
+  // Get user by ID
+  export async function getUserById(userId) {
+      const user = await prisma.user.findUnique({
+          where: { id: userId },
+          select: {
+              id: true,
+              email: true,
+              foodEntries: true,
+          },
+      });
+      return user;
+  }
+  

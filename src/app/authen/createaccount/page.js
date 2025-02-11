@@ -37,7 +37,7 @@ export default function CreateAccount() {
       setTimeout(() => {
         setSuccessMessage(''); // Clear success message after 5 seconds
         router.push('/authen/login'); // Redirect to login page
-      }, 5000);
+      }, 3000);
     } catch (err) {
       setError(err.message); // Set the error message to display
     }
@@ -51,6 +51,11 @@ export default function CreateAccount() {
           {successMessage}
         </div>
       )}
+       <img
+        src="/icon.svg"
+        alt="Logo"
+        className="absolute top-8 left-6 transform -translate-x-1/2 -translate-y-1/2 md:w-[1000px] md:h-auto lg:w-[1200px] lg:h-auto z-0 pointer-events-none"
+      />
       {/* Centered Form Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-screen p-4 sm:p-8 md:p-10">
         <h1 className="text-center font-bold mb-4 text-4xl">Create Account</h1>
@@ -142,6 +147,11 @@ export default function CreateAccount() {
           ← Back
         </Link>
       </div>
+      <img
+        src="/icon.svg"
+        alt="Logo"
+        className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 md:w-[800px] md:h-100 lg:w-[1000px] lg:h-100 z-0 pointer-events-none"
+      />
     </div>
   );
 }

@@ -1,4 +1,3 @@
-
 import bcrypt from 'bcryptjs';
 import prisma from '@/database/client'; // Correct import path for prisma
 
