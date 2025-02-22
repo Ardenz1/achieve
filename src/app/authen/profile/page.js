@@ -6,12 +6,19 @@ import { useEffect, useState } from "react";
 export default function Profile() {
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [email, setNewEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');  // Add state for error message
+  const [EmailsuccessMessage, EmailsetSuccessMessage] = useState('');
+  const [EmailerrorMessage, EmailsetErrorMessage] = useState('');  // Add state for error message
+
+
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
   
       if (!token) {
         console.warn("No token found.");
@@ -25,16 +32,14 @@ export default function Profile() {
             Authorization: `Bearer ${token}`,
           },
         });
-  
-        console.log("Response Status:", response.status);
-  
+
         const data = await response.json();
-        console.log("Response Data:", data);
   
         if (!response.ok) {
           console.error("Error from API:", data.error);
         } else {
           setUser(data.user);
+          setNewEmail(data.user.email);
         }
       } catch (error) {
         console.error("Fetch Error:", error);
@@ -44,10 +49,42 @@ export default function Profile() {
     fetchUserData();
   }, []);
   
-  
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.push("/welcome");
+  const handleEmailUpdate = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch("/api/profile/updateprofile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        EmailsetSuccessMessage('Email updated successfully!');
+        EmailsetErrorMessage('');
+      } else {
+        EmailsetSuccessMessage('');
+        EmailsetErrorMessage(data.error || "Failed to update email");
+      }
+      
+      // In handlePasswordUpdate:
+      if (response.ok) {
+        EmailsetSuccessMessage("Password updated successfully!");
+        EmailsetErrorMessage('');
+        setUser((prevState) => ({ ...prevState, email })); 
+      } else {
+        EmailsetSuccessMessage('');
+        EmailsetErrorMessage(data.error || "Something went wrong!");
+      }
+    } catch (error) {
+      EmailsetSuccessMessage('');
+      EmailsetErrorMessage("Error updating email: " + error.message);
+    }
   };
   
   const handlePasswordUpdate = async (e) => {
@@ -67,44 +104,56 @@ export default function Profile() {
       const data = await response.json();
       
       if (response.ok) {
-        alert("Password updated successfully!");
+        setSuccessMessage("Password updated successfully!"); // Show success message
+        setErrorMessage(''); // Clear error message if successful
       } else {
-        alert(data.error);
+        setSuccessMessage(''); // Clear success message if failed
+        setErrorMessage(data.error || "Something went wrong!"); // Set error message
       }
     } catch (error) {
-      console.error("Error updating password:", error);
+      setSuccessMessage(''); // Clear success message if an error occurs
+      setErrorMessage("Error updating password: " + error.message); // Set error message
     }
   };
   
-
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/welcome");
+  };
 
   return (
-<div className="relative z-10 flex flex-col items-center justify-center h-auto p-4 sm:p-8 sm:mb-[20%] md:mb-20 md:p-10">
+<div className="relative z-10 flex flex-col bg-gradient-to-b from-achieve-white via-achieve-seagreen to-achieve-white items-center justify-center h-auto p-4 sm:items-center sm:p-8 sm:mb-[20%] md:mb-0 md:p-10">
 <h1 className="font-bold mt-16 mb-20 text-4xl">Profile</h1>
 
     <div className="w-full  rounded-lg p-6 sm:p-8 md:p-10 max-w-screen-lg flex flex-col md:flex-row gap-28 mb-6">
     {/* Email Update Form */}
     {/* onSubmit={handleEmailUpdate} */}
-    <form  className="w-full max-w-sm sm:max-w-md mb-6 bg-achieve-bluepurple p-6 rounded-lg">
-      <h2 className="text-2xl mb-4">Update Email</h2>
+    <form onSubmit={handleEmailUpdate} className="w-full max-w-sm sm:max-w-md mb-6 bg-achieve-bluepurple p-6 rounded-lg">
+      <h2 className="text-2xl mb-4">Update Profile Information</h2>
 
       <div className="mb-4">
         <label className="block text-lg font-medium mb-1">Email</label>
         <input
           type="email"
-          value={user?.email || ""}
-          onChange={(e) => setNewEmail(e.target.value)} // Manage email state with setNewEmail
+          value={email}
+          onChange={(e) => setNewEmail(e.target.value)} 
           className="w-full p-3 placeholder-achieve-grey border  border-achieve-purple rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
-      <button type="submit" className="w-80 sm:max-w-md p-3 bg-achieve-grey text-white mt-5 rounded-lg text-lg font-semibold hover:bg-achieve-seagreen transition">
+      <button type="submit" className="w-40 sm:max-w-md p-3 bg-achieve-grey text-white mt-5 rounded-lg text-md font-semibold hover:bg-achieve-seagreen transition">
         Update Email
       </button>
+
+      {EmailsuccessMessage && (
+        <div className="mt-2 p-2 text-center text-achieve-white font-semibold">{EmailsuccessMessage}</div>
+              )}
+        {EmailerrorMessage && (
+          <div className="mt-2 p-2 text-center text-achieve-white font-semibold">{EmailerrorMessage}</div>
+              )}
     </form>
 
     {/* Password Update Form */}
-    {/* onSubmit={handlePasswordUpdate} */}
     <form onSubmit={handlePasswordUpdate} className="w-full max-w-sm sm:max-w-md mb-6 bg-achieve-orange p-6 rounded-lg">
       <h2 className="text-2xl mb-4">Update Password</h2>
 
@@ -128,9 +177,15 @@ export default function Profile() {
         />
       </div>
 
-      <button type="submit" className="w-80 sm:max-w-md p-3 bg-achieve-grey text-white mt-5 rounded-lg text-lg font-semibold hover:bg-achieve-seagreen transition ">
+      <button type="submit" className="w-40 sm:max-w-md p-3 bg-achieve-grey text-white mt-5 rounded-lg text-md font-semibold hover:bg-achieve-seagreen transition ">
         Update Password
       </button>
+      {successMessage && (
+          <div className="mt-2 p-2 text-center text-achieve-white font-semibold">{successMessage}</div>
+        )}
+        {errorMessage && (
+          <div className="mt-2 p-2 text-center text-achieve-white font-semibold">{errorMessage}</div>
+        )}
     </form>
     </div>
 
@@ -189,7 +244,7 @@ export default function Profile() {
     </div> */}
 
     {/* Logout Button */}
-    <button onClick={handleLogout} className="w-80 sm:max-w-md p-3 bg-red-500 text-white mt-5 rounded-lg text-lg font-semibold hover:bg-achieve-seagreen transition">
+    <button onClick={handleLogout} className="w-48 sm:max-w-md p-3 bg-red-500 text-white mt-5 rounded-lg text-lg font-semibold hover:bg-achieve-seagreen  transition">
       Logout
     </button>
 

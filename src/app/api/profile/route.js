@@ -28,7 +28,7 @@ export async function GET(req) {
     }
 
     // Return the user data (excluding the password for security)
-    return Response.json({ user: { email: user.email } }, { status: 200 });
+    return Response.json({ user: { id: user.id, email: user.email } }, { status: 200 });
   } catch (error) {
     return Response.json({ error: 'Internal Server Error' }, { status: 500 });
   }

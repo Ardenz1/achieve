@@ -22,12 +22,46 @@ model User {
   
   // Relations
   foodEntries   FoodEntry[] // One-to-many relationship with FoodEntry
+  dayEntries    DayEntry[]
+}
+
+model DayEntry {
+  id            String   @id @default(cuid())   // Unique identifier
+  userId        String                              // User who owns this day log
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date          DateTime @unique                    // Date of the entry (e.g., 1/22/25)
+  weight        Float?                              // User's weight for that day (optional)
+
+  // Summarized Nutrition Data
+  totalCalories Float?   @default(0)               // Total calories eaten that day
+  totalCarbs    Float?   @default(0)               // Total carbohydrates
+  totalProtein  Float?   @default(0)               // Total protein
+  totalFat      Float?   @default(0)               // Total fat
+  totalFiber    Float?   @default(0)               // Total fiber
+  totalSugar    Float?   @default(0)               // Total sugar
+  totalSodium   Float?   @default(0)               // Total sodium
+
+  // Calculated Nutrition Breakdown
+  calculatedCalories Float?   @default(0)               
+  calculatedCarbs    Float?   @default(0)               
+  calculatedProtein  Float?   @default(0)               
+  calculatedFat      Float?   @default(0)               
+  calculatedFiber    Float?   @default(0)               
+  calculatedSugar    Float?   @default(0)               
+  calculatedSodium   Float?   @default(0)               
+
+  // Relations
+  foodEntries   FoodEntry[] // One-to-many relationship with FoodEntry
 }
 
 model FoodEntry {
   id           String   @id @default(cuid())   // Unique identifier
   userId       String                              // User who logged the entry
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  dayId        String                              // Links food entry to a specific day
+  dayEntry     DayEntry @relation(fields: [dayId], references: [id], onDelete: Cascade)
 
   // Entry details
   mealName     String?                           // Optional: Name of the meal (e.g., "Lunch")
@@ -37,22 +71,21 @@ model FoodEntry {
   savedAt      DateTime @default(now())          // Timestamp when the entry was saved
   date         DateTime                          // Date of the entry (e.g., 1/22/25)
 
-  
   // Nutrition breakdown
-  calories     Float?                            // Total calories (optional)
-  carbs        Float?                            // Carbohydrates (optional)
-  protein      Float?                            // Protein (optional)
-  fat          Float?                            // Fat (optional)
-  fiber        Float?                            // Fiber (optional)
-  sugar        Float?                            // Sugar (optional)
-  sodium       Float?                            // Sodium (optional)
+  calories     Float?                            
+  carbs        Float?                            
+  protein      Float?                            
+  fat          Float?                            
+  fiber        Float?                            
+  sugar        Float?                            
+  sodium       Float?                            
 
   // Nutrition breakdown calculated
-  CalcCalories     Float?                            // Total calories (optional)
-  CalcCarbs        Float?                            // Carbohydrates (optional)
-  CalcProtein      Float?                            // Protein (optional)
-  CalcFat          Float?                            // Fat (optional)
-  CalcFiber        Float?                            // Fiber (optional)
-  CalcSugar        Float?                            // Sugar (optional)
-  CalcSodium       Float?                            // Sodium (optional)
+  CalcCalories Float?                            
+  CalcCarbs    Float?                            
+  CalcProtein  Float?                            
+  CalcFat      Float?                            
+  CalcFiber    Float?                            
+  CalcSugar    Float?                            
+  CalcSodium   Float?                            
 }

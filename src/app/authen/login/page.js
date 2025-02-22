@@ -81,7 +81,7 @@ export default function Login() {
         {error && <p>{error}</p>}
 
         {successMessage && (
-        <div className=" text-green-500 p-4 text-center font-semibold z-50">
+        <div className=" text-achieve-green p-4 text-center font-semibold z-50">
           {successMessage}
         </div>
       )}

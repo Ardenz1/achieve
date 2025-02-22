@@ -1,24 +1,21 @@
 import prisma from '@/database/client';
 
+// Get all entries
+export async function getAllEntriesByUser(userId) { 
+  console.log('Querying for userId:', userId); // Log the userId
+  const days = await prisma.dayEntry.findMany({
+    where: { userId: userId },
+    orderBy: { date: "desc" },
+    select: {
+      date: true,
+      weight: true,
+      totalCalories: true,
+   
+    }
+  });
+  return days;
+}
 
-// Get all entrie
-export async function getAllEntries() {
-    const entries = await prisma.topic.findMany({
-
-    });
-    return entries;
-  }
-
-
-  // GET a single entry by id
-export async function getentryById(entry_id) {
-    const entry = await prisma.entry.findUnique({
-      where: { entry_id: entry_id }
-    });
-    return entry;
-  }
-  
-  import prisma from '@/database/client';
 
   // Get user by ID
   export async function getUserById(userId) {
@@ -33,3 +30,15 @@ export async function getentryById(entry_id) {
       return user;
   }
   
+  export async function saveFoodEntry(data) {
+    return await prisma.foodEntry.create({
+        data
+    });
+}
+export async function getEntryById(dayEntryId) {
+  console.log('Fetching entry with ID:', dayEntryId); // Log the ID being fetched
+
+  return await prisma.dayEntry.findUnique({
+    where: { id: dayEntryId },
+  });
+}

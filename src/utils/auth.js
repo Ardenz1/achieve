@@ -9,6 +9,7 @@ export function getTokenFromHeaders(req) {
 }
 
 export function verifyToken(token) {
+  console.log("Token to verify:", token); // Log the token
   try {
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {

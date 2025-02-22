@@ -33,7 +33,7 @@ export default function CreateAccount() {
       }
 
       // Show success message and redirect to login
-      setSuccessMessage('Account created successfully! You can now log in.');
+      setSuccessMessage('Account created successfully! Redirecting to login page.');
       setTimeout(() => {
         setSuccessMessage(''); // Clear success message after 5 seconds
         router.push('/authen/login'); // Redirect to login page
@@ -45,12 +45,6 @@ export default function CreateAccount() {
 
   return (
     <div>
-       {/* Success Message */}
-       {successMessage && (
-        <div className="fixed top-0 left-0 right-0 bg-achieve-green text-white p-4 text-center font-semibold z-50">
-          {successMessage}
-        </div>
-      )}
        <img
         src="/icon.svg"
         alt="Logo"
@@ -141,6 +135,11 @@ export default function CreateAccount() {
           Create Account
         </button>
         {error && <p>{error}</p>}
+        {successMessage && (
+        <div className="text-achieve-green p-4 text-center font-semibold">
+          {successMessage}
+        </div>
+      )}
 
         {/* Back Button */}
         <Link href="/welcome" className="mt-4 text-achieve-grey hover:underline text-lg text-center">
