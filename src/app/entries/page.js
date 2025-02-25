@@ -1,20 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
 import EntryCard from "../../components/EntryCard";
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 export default function Entry() {
   const [entries, setEntries] = useState([]);
   const [error, setError] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(""); // Track selected date
+  const [showCalendar, setShowCalendar] = useState(false); // Toggle calendar visibility
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      console.warn("No token found.");
-      return;
-    }
+    if (!token) return;
 
     const decodeToken = (token) => {
       const base64Url = token.split(".")[1];
@@ -22,22 +20,15 @@ export default function Entry() {
       const jsonPayload = decodeURIComponent(
         atob(base64)
           .split("")
-          .map(function (c) {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
           .join("")
       );
-
       return JSON.parse(jsonPayload);
     };
 
     const decodedToken = decodeToken(token);
     const userId = decodedToken?.userId;
-
-    if (!userId) {
-      console.warn("User ID not found in the token.");
-      return;
-    }
+    if (!userId) return;
 
     const fetchEntries = async () => {
       const response = await fetch(`/api/entries?userId=${userId}`);
@@ -50,31 +41,33 @@ export default function Entry() {
 
   const handleCreateDayEntry = async () => {
     const token = localStorage.getItem("token");
-  
+    if (!selectedDate) {
+      setError("Please select a date before proceeding.");
+      return;
+    }
+    
+    console.log("Selected Date (Before API Request):", selectedDate);
     try {
-      const response = await fetch('/api/entries/createFoodDay', {
-        method: 'POST',
+      const response = await fetch("/api/entries/createFoodDay", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ token, date: selectedDate }),
       });
-  
+
       if (!response.ok) {
         const data = await response.json();
-        if (data.error) {
-          setError(data.error);
-        } else {
-          setError("Failed to create day entry.");
-        }
+        setError(data.error || "Failed to create day entry.");
         return;
       }
-  
+
       const data = await response.json();
-      const newDayEntryId = data.dayEntryId; // Access dayEntryId directly
-      console.log("newEntryId", newDayEntryId);
-      console.log("data", data);
-      router.push(`/entries/newDay?dayEntryId=${newDayEntryId}`); // Redirect with dayEntryId
+      console.log("Full API Response:", data);
+      console.log("Returned Date from API:", data.date);
+      
+      const newDayEntryId = data.dayEntryId;
+      router.push(`/entries/newDay?dayEntryId=${newDayEntryId}`);
     } catch (error) {
       console.error("Error creating day entry:", error);
       setError("An unexpected error occurred.");
@@ -84,15 +77,44 @@ export default function Entry() {
   return (
     <div className="bg-gradient-to-b from-achieve-white via-achieve-seagreen grid items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <h1 className="text-center text-3xl font-bold mb-4">All Entries</h1>
-      <button 
-        onClick={handleCreateDayEntry} 
+
+      <div className="flex items-center flex-row-reverse gap-4">
+      {/* Date Picker Section */}
+      <div className="flex items-center gap-4">
+        <button
+          onClick={() => setShowCalendar(!showCalendar)}
+          className="text-3xl text-achieve-seagreen cursor-pointer"
+        >
+          <i className="fa-solid fa-calendar-days"></i>
+        </button>
+
+        {/* Display selected date */}
+        {selectedDate && <span className="text-xl">{selectedDate}</span>}
+      </div>
+
+      {/* Create Entry Button */}
+      <button
+        onClick={handleCreateDayEntry}
         className="bg-achieve-seagreen p-4 text-xl rounded-md hover:bg-achieve-yellow"
       >
         Add New Entry
       </button>
-      {error && (
-        <div className="text-red-500 text-center mb-4">{error}</div>
+      </div>
+      
+      {/* Calendar Input */}
+      {showCalendar && (
+        <input
+          type="date"
+          className="border p-2 rounded-md text-lg"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+        />
       )}
+
+      {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+     
+
+      {/* Entries List */}
       {entries.map((entry, index) => (
         <EntryCard key={index} entry={entry} />
       ))}

@@ -7,6 +7,7 @@ export async function getAllEntriesByUser(userId) {
     where: { userId: userId },
     orderBy: { date: "desc" },
     select: {
+      id: true,
       date: true,
       weight: true,
       totalCalories: true,

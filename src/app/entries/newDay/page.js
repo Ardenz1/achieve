@@ -63,9 +63,6 @@ export default function NewEntry() {
         <SummaryCard date={selectedDate} />
         <MealHistoryCard date={selectedDate} />
       </div>
-      <button className="text-lg font-semibold bg-achieve-grey text-achieve-white rounded-lg p-4 px-8 hover:bg-achieve-bluepurple">
-        Save
-      </button>
     </div>
   );
 }
