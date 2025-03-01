@@ -84,7 +84,7 @@ export async function POST(req) {
     });
 
     if (existingEntry) {
-      return NextResponse.json({ error: "An entry already exists for that day." }, { status: 400 });
+      return NextResponse.json({ error: "An entry already exists for that day, please choose a new date." }, { status: 400 });
     }
 
     // Create a new day entry with the selected date

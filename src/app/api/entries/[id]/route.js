@@ -9,8 +9,6 @@ export async function GET(request, { params }) {
       select: {
         date: true,          // Select the date field
         weight: true,        // Include the weight field (add other fields as necessary)
-        totalCalories: true, // Include the totalCalories field (add other fields as necessary)
-        // Add other fields you want to return here
       },
     });
 

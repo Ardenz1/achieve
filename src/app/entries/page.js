@@ -46,7 +46,6 @@ export default function Entry() {
       return;
     }
     
-    console.log("Selected Date (Before API Request):", selectedDate);
     try {
       const response = await fetch("/api/entries/createFoodDay", {
         method: "POST",
@@ -113,11 +112,13 @@ export default function Entry() {
 
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-7xl px-4">
 
       {/* Entries List */}
       {entries.map((entry, index) => (
-        <EntryCard key={index} entry={entry} />
+        <EntryCard key={index} entry={entry}  className="w-full h-full" />
       ))}
+      </div>
     </div>
   );
 }

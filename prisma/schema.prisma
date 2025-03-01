@@ -34,7 +34,7 @@ model DayEntry {
   weight        Float?                              // User's weight for that day (optional)
 
   // Summarized Nutrition Data
-  totalCalories Float?   @default(0)               // Total calories eaten that day
+  totalCalories Float?   @default(0)               // DELETE THIS EVENTUALLY and th ones below, it's redundant
   totalCarbs    Float?   @default(0)               // Total carbohydrates
   totalProtein  Float?   @default(0)               // Total protein
   totalFat      Float?   @default(0)               // Total fat
@@ -69,7 +69,7 @@ model FoodEntry {
   servingSize  Float                            
   amount       Float                             // Quantity eaten
   savedAt      DateTime @default(now())          // Timestamp when the entry was saved
-  date         DateTime                          // Date of the entry (e.g., 1/22/25)
+  date         DateTime                          // DELETE THIS EVENTUALLY 
 
   // Nutrition breakdown
   calories     Float?                            
