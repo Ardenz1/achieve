@@ -122,6 +122,7 @@ export default function Profile() {
   };
 
   return (
+    <div><Link href="/"><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-seagreen"></i></Link>
 <div className="relative z-10 flex flex-col bg-gradient-to-b from-achieve-white via-achieve-seagreen to-achieve-white items-center justify-center h-auto p-4 sm:items-center sm:p-8 sm:mb-[20%] md:mb-0 md:p-10">
 <h1 className="font-bold mt-16 mb-20 text-4xl">Profile</h1>
 
@@ -252,6 +253,7 @@ export default function Profile() {
     <Link href="/" className="mt-4 text-achieve-grey hover:underline text-lg text-center">
       ← Back
     </Link>
+  </div>
   </div>
    
   );

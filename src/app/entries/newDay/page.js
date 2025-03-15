@@ -5,22 +5,26 @@ import SummaryCard from "@/components/SummaryCard";
 import { useRouter } from 'next/navigation';
 
 export default function NewEntry() {
-  const [selectedDate, setSelectedDate] = useState(""); // Default to empty
+  const [selectedDate, setSelectedDate] = useState(""); 
+  const [dayEntryId, setDayEntryId] = useState("");  // Added dayEntryId state
   const [error, setError] = useState(null);
   const router = useRouter();
   
   useEffect(() => {
     const fetchDayEntry = async () => {
       const { searchParams } = new URL(window.location.href);
-      const dayEntryId = searchParams.get("dayEntryId");
+      const id = searchParams.get("dayEntryId");
+      console.log( "dayuENtry!",id);
       
-      if (!dayEntryId) {
+      if (!id) {
         setError("No day entry ID provided.");
         return;
       }
 
+      setDayEntryId(id);
+
       try {
-        const response = await fetch(`/api/entries/${dayEntryId}`);
+        const response = await fetch(`/api/entries/${id}`);
         if (!response.ok) {
           const data = await response.json();
           setError(data.error || "Failed to fetch day entry.");
@@ -61,7 +65,7 @@ export default function NewEntry() {
       {/* Entry Cards */}
       <div>
         <SummaryCard date={selectedDate} />
-        <MealHistoryCard date={selectedDate} />
+        <MealHistoryCard date={selectedDate} dayId={dayEntryId}/>
       </div>
     </div>
   );

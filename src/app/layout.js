@@ -1,5 +1,5 @@
-import { M_PLUS_Rounded_1c
-} from "next/font/google";
+import { M_PLUS_Rounded_1c } from "next/font/google";
+
 import "./globals.css";
 import Header from "../components/header";
 import Footer from "../components/footer";

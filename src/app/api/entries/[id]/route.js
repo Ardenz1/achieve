@@ -5,10 +5,21 @@ export async function GET(request, { params }) {
 
   try {
     const dayEntry = await prisma.dayEntry.findUnique({
-      where: { id },
-      select: {
-        date: true,          // Select the date field
-        weight: true,        // Include the weight field (add other fields as necessary)
+      where: { id: id },
+      include: {
+        foodEntries: {
+          select: {
+            id: true,
+            mealName: true,
+            CalcCalories: true, 
+            CalcCarbs: true,
+            CalcProtein: true,
+            CalcFat: true,
+            CalcFiber: true,
+            CalcSugar: true,
+            CalcSodium: true
+          },
+        },
       },
     });
 

@@ -10,8 +10,10 @@ const WeightBar = ({ weight, onSave }) => {
   };
 
   return (
-    <div className="bg-achieve-bluepurple w-96 p-4 mt-4 rounded-md text-white flex justify-around items-center">
-      <div>
+    <div className="bg-achieve-bluepurple sm:w-[80%] md:w-[40%] lg:w-[40%] p-4 mt-4 rounded-md text-white text-center items-center border">
+    <h1 className="text-2xl font-bold mb-10">Weight</h1>
+
+      <div className="flex justify-center mb-10">
         {isEditing ? (
           // If editing, show input and save button
           <>

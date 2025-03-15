@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
+import Link from 'next/link';
 
 export default function NewFoodEntry() {
   const [userId, setUserId] = useState(null);
@@ -123,7 +124,6 @@ export default function NewFoodEntry() {
 
       const result = await response.json();
       console.log("Saved food entry:", result);
-
       // Clear form after successful submission
       setmealName("");
       setCalories("");
@@ -136,6 +136,9 @@ export default function NewFoodEntry() {
       setUnits("grams");
       setAmount("");
       setServingSize("");
+
+      window.location.href = `/entries/${dayId}/dayView`;
+
     } catch (error) {
       console.error("Error:", error);
       setError("Something went wrong. Please try again.");
@@ -145,6 +148,8 @@ export default function NewFoodEntry() {
   };
 
   return (
+    <div><Link href={`/entries/${dayId}/dayView`}><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-yellow"></i></Link>
+
     <div className="relative bg-gradient-to-b from-achieve-white via-achieve-yellow justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] flex flex-col items-center">
       <div className="w-full max-w-lg mt-5">
         <div className="flex items-center w-full">
@@ -169,14 +174,13 @@ export default function NewFoodEntry() {
           { label: "Fat", color: "border-achieve-orange", state: fat, setState: setFat },
           { label: "Fiber", color: "border-achieve-bluepurple", state: fiber, setState: setFiber },
           { label: "Sugar", color: "border-achieve-seagreen", state: sugar, setState: setSugar },
-          { label: "Sodium", color: "border-achieve-purple", state: sodium, setState: setSodium },
+          { label: "Sodium", color: "border-achieve-purple", state: sodium, setState: setSodium, unit: "mg" },
         ].map((nutrient) => (
           <div key={nutrient.label} className="mb-4 w-full">
             <h3 className="text-lg font-thin">{nutrient.label}</h3>
             <input
               type="text"
-              placeholder="0 g"
-              value={nutrient.state}
+              placeholder={`0 ${nutrient.unit || "g"}`}              value={nutrient.state}
               onChange={(e) => nutrient.setState(e.target.value)}
               className={`bg-transparent border ${nutrient.color} rounded-md p-2 outline-none w-full`}
             />
@@ -228,6 +232,7 @@ export default function NewFoodEntry() {
       </button>
 
       {error && <p className="text-red-500">{error}</p>}
+    </div>
     </div>
   );
 }

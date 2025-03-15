@@ -25,7 +25,7 @@ const MealHistoryCard = ({ dayId, weight }) => { // Updated prop name to match
       }
     };
 
-    if (dayId) { // Only fetch if dayId is defined
+    if (dayId) { 
       fetchFoodEntries();
     }
   }, [dayId]);
@@ -33,7 +33,7 @@ const MealHistoryCard = ({ dayId, weight }) => { // Updated prop name to match
   return (
     <div className="bg-achieve-green mt-20 p-8 md:p-12 rounded-lg w-full max-w-2xl flex flex-col gap-6">
       <div className="flex justify-center items-center">
-        <h1 className="text-lg font-bold text-center px-4">Meal History</h1>
+        <h1 className="text-2xl font-bold text-center px-4">Meal History</h1>
         <Link href={`/entries/${dayId}/newFood`} title="Add new food entry">
           <i className="fa-solid fa-plus text-lg hover:text-achieve-white"></i>
         </Link>
@@ -43,7 +43,7 @@ const MealHistoryCard = ({ dayId, weight }) => { // Updated prop name to match
 
       <div className="space-y-4">
         {foodEntries.map((meal) => (
-          <MealBarEntry key={meal.id} name={meal.mealName} calories={meal.CalcCalories} />
+          <MealBarEntry key={meal.id} name={meal.mealName} calories={meal.CalcCalories}  dayId={dayId} foodId={meal.id}/>
         ))}
       </div>
     </div>

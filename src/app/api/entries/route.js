@@ -1,30 +1,3 @@
-// import { getAllEntriesByUser } from "../../../database/database"; 
-
-// export async function GET(request) {
-//   const { searchParams } = new URL(request.url);
-//   const userId = searchParams.get('userId');
-  
-//   console.log('Received userId:', userId);  // Log the userId to check it
-
-
-//   if (!userId) {
-//     return new Response(JSON.stringify({ error: 'User ID is required' }), { status: 400 });
-//   }
-
-//   try {
-//     const entries = await getAllEntriesByUser(userId);
-//     console.log('Entries fetched:', entries); 
-
-
-//     return new Response(JSON.stringify(entries), { status: 200 });
-//   } catch (error) {
-//     return new Response(
-//       JSON.stringify({ error: 'Something went wrong' }),
-//       { status: 500 }
-//     );
-//   }
-// }
-
 import { getAllEntriesByUser, getEntryById } from "../../../database/database"; 
 
 export async function GET(request) {
@@ -63,3 +36,31 @@ export async function GET(request) {
     );
   }
 }
+
+// import { getAllEntriesByUser } from "../../../database/database"; 
+
+// export async function GET(request) {
+//   const { searchParams } = new URL(request.url);
+//   const userId = searchParams.get('userId');
+  
+//   console.log('Received userId:', userId);  // Log the userId to check it
+
+
+//   if (!userId) {
+//     return new Response(JSON.stringify({ error: 'User ID is required' }), { status: 400 });
+//   }
+
+//   try {
+//     const entries = await getAllEntriesByUser(userId);
+//     console.log('Entries fetched:', entries); 
+
+
+//     return new Response(JSON.stringify(entries), { status: 200 });
+//   } catch (error) {
+//     return new Response(
+//       JSON.stringify({ error: 'Something went wrong' }),
+//       { status: 500 }
+//     );
+//   }
+// }
+

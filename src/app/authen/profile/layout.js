@@ -5,7 +5,7 @@ export default function profile({ children }) {
     return (
       <div>
         
-          <Header />
+        <Header />
         <main>{children}</main>
         <Footer />
       </div>

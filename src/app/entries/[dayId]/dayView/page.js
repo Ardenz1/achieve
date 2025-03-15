@@ -4,10 +4,12 @@ import MealHistoryCard from "@/components/MealHistoryCard";
 import SummaryCard from "@/components/SummaryCard";
 import WeightBar from "@/components/WeightBar";
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function DayViewEntry() {
   const [selectedDate, setSelectedDate] = useState("");
   const [weight, setWeight] = useState(null);  // Initialize as null to ensure we fetch the correct value
+  const [foodEntries, setFoodEntries] = useState([]);
   const [error, setError] = useState(null);
   const router = useRouter();
   const [dayEntryId, setDayEntryId] = useState("");
@@ -37,6 +39,7 @@ export default function DayViewEntry() {
       if (data) {
         setSelectedDate(data.date.split("T")[0]);
         setWeight(data.weight); 
+        setFoodEntries(data.foodEntries);  // Set foodEntries from the response
       } else {
         setError("Data not found.");
       }
@@ -46,7 +49,30 @@ export default function DayViewEntry() {
     }
   };
 
-  // Use useEffect to fetch the initial day entry when the component mounts
+  // Calculate nutritional totals
+  const calculateTotals = (foodEntries) => {
+    return foodEntries.reduce((totals, food) => {
+      totals.Calories += food.CalcCalories || 0;
+      totals.Carbs += food.CalcCarbs || 0;
+      totals.Protein += food.CalcProtein || 0;
+      totals.Fat += food.CalcFat || 0;
+      totals.Fiber += food.CalcFiber || 0;
+      totals.Sugar += food.CalcSugar || 0;
+      totals.Sodium += food.CalcSodium || 0;
+      return totals;
+    }, {
+      Calories: 0,
+      Carbs: 0,
+      Protein: 0,
+      Fat: 0,
+      Fiber: 0,
+      Sugar: 0,
+      Sodium: 0,
+    });
+  };
+
+  const totals = calculateTotals(foodEntries);
+
   useEffect(() => {
     fetchDayEntry();
   }, []);
@@ -79,11 +105,11 @@ export default function DayViewEntry() {
   const handleWeightSave = async (newWeight) => {
     try {
       const response = await fetch(`/api/entries/${dayEntryId}/edit/editWeight`, {
-        method: 'PUT', // Use PUT to update the resource
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ weight: newWeight }), // Send the updated weight
+        body: JSON.stringify({ weight: newWeight }),
       });
 
       if (!response.ok) {
@@ -93,7 +119,7 @@ export default function DayViewEntry() {
       }
 
       const data = await response.json();
-      await fetchDayEntry(); 
+      await fetchDayEntry();
 
     } catch (error) {
       console.error("Error updating weight:", error);
@@ -102,10 +128,13 @@ export default function DayViewEntry() {
   };
 
   return (
-    <div className="relative bg-gradient-to-b from-achieve-white via-achieve-bluepurple grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <div className="self-start justify-self-start w-full">
+    <div><Link href="/entries"><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-bluepurple"></i></Link>
+
+    <div className="relative min-h-screen bg-gradient-to-b from-achieve-white via-achieve-bluepurple p-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      {/* Date Picker & Error Message */}
+      <div className="w-full max-w-7xl mx-auto">
         {error && <div className="text-red-500">{error}</div>}
-        <div className="bg-achieve-bluepurple p-4 rounded-lg w-max text-3xl">
+        <div className="bg-achieve-bluepurple p-4 rounded-lg inline-block text-3xl">
           <input
             type="date"
             value={selectedDate}
@@ -115,28 +144,37 @@ export default function DayViewEntry() {
           />
         </div>
       </div>
-
-      <div className="w-full max-w-7xl px-4">
-        {/* Grid container for cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 1 lg:grid-cols-2 gap-20">
-          <SummaryCard date={selectedDate} />
-          <MealHistoryCard dayId={dayEntryId} date={selectedDate} weight={weight} />
-        </div>
-
-        {/* Centered WeightBar for large screens */}
-        <div className="pt-10 flex flex-col items-center lg:mt-8">
-          <h1 className="text-2xl font-bold">Weight</h1>
-          <WeightBar
-            date={selectedDate}
-            weight={weight}
-            onSave={handleWeightSave} // Pass the handleWeightSave function to WeightBar
-            className="w-[40%]"
-          />
-          <button onClick={handleDelete} className=" w-48 sm:max-w-md p-3 bg-red-500 text-white mt-20 rounded-lg text-lg font-semibold hover:bg-achieve-green transition">
-            Delete Entry
-          </button>
-        </div>
+  
+      {/* Summary & Meal History */}
+      <div className="w-full max-w-7xl mx-auto mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <SummaryCard 
+          calories={totals.Calories}
+          carbs={totals.Carbs}
+          protein={totals.Protein}
+          fat={totals.Fat}
+          fiber={totals.Fiber}
+          sugar={totals.Sugar}
+          sodium={totals.Sodium}
+          date={selectedDate} 
+        />
+        <MealHistoryCard dayId={dayEntryId} date={selectedDate} weight={weight} />
+      </div>
+  
+      {/* Weight Bar & Delete Button */}
+      <div className="w-full max-w-4xl mx-auto mt-12 flex flex-col">
+        <WeightBar
+          date={selectedDate}
+          weight={weight}
+          onSave={handleWeightSave}
+        />
+        <button 
+          onClick={handleDelete} 
+          className="mt-10 w-48 p-3 bg-red-500 text-white rounded-lg text-lg font-semibold hover:bg-achieve-green transition">
+          Delete Entry
+        </button>
       </div>
     </div>
+    </div>
   );
+  
 }

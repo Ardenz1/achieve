@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import EntryCard from "../../components/EntryCard";
 import { useRouter } from "next/navigation";
+import Link from 'next/link'
 
 export default function Entry() {
   const [entries, setEntries] = useState([]);
@@ -33,6 +34,7 @@ export default function Entry() {
     const fetchEntries = async () => {
       const response = await fetch(`/api/entries?userId=${userId}`);
       const data = await response.json();
+      console.log("Entries fetched:", data);
       setEntries(data);
     };
 
@@ -74,8 +76,9 @@ export default function Entry() {
   };
 
   return (
+    <div><Link href="/"><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-seagreen"></i></Link>
     <div className="bg-gradient-to-b from-achieve-white via-achieve-seagreen grid items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <h1 className="text-center text-3xl font-bold mb-4">All Entries</h1>
+      <h1 className="text-center text-4xl font-bold mb-4">All Entries</h1>
 
       <div className="flex items-center flex-row-reverse gap-4">
       {/* Date Picker Section */}
@@ -119,6 +122,7 @@ export default function Entry() {
         <EntryCard key={index} entry={entry}  className="w-full h-full" />
       ))}
       </div>
+    </div>
     </div>
   );
 }
