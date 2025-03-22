@@ -122,11 +122,11 @@ export default function Profile() {
   };
 
   return (
-    <div><Link href="/"><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-seagreen"></i></Link>
-<div className="relative z-10 flex flex-col bg-gradient-to-b from-achieve-white via-achieve-seagreen to-achieve-white items-center justify-center h-auto p-4 sm:items-center sm:p-8 sm:mb-[20%] md:mb-0 md:p-10">
+<div className="relative z-10 flex flex-col bg-[url('/profilebg.png')] bg-cover bg-center items-center justify-center h-auto p-4 sm:items-center sm:p-8 sm:mb-[20%] md:mb-0 md:p-10">
+<Link href="/"><i className="absolute top-5 left-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-seagreen"></i></Link>
 <h1 className="font-bold mt-16 mb-20 text-4xl">Profile</h1>
 
-    <div className="w-full  rounded-lg p-6 sm:p-8 md:p-10 max-w-screen-lg flex flex-col md:flex-row gap-28 mb-6">
+    <div className="w-full justify-center rounded-lg p-6 sm:p-8 md:p-10 max-w-screen-lg flex flex-col md:flex-row gap-28 mb-6 ">
     {/* Email Update Form */}
     {/* onSubmit={handleEmailUpdate} */}
     <form onSubmit={handleEmailUpdate} className="w-full max-w-sm sm:max-w-md mb-6 bg-achieve-bluepurple p-6 rounded-lg">
@@ -245,16 +245,13 @@ export default function Profile() {
     </div> */}
 
     {/* Logout Button */}
-    <button onClick={handleLogout} className="w-48 sm:max-w-md p-3 bg-red-500 text-white mt-5 rounded-lg text-lg font-semibold hover:bg-achieve-seagreen  transition">
+    <button onClick={handleLogout} className="w-48 sm:max-w-md p-3 bg-red-500 text-white mt-5 mb-10 rounded-lg text-lg font-semibold hover:bg-achieve-darkorange  transition">
       Logout
     </button>
 
-    {/* Back Button */}
-    <Link href="/" className="mt-4 text-achieve-grey hover:underline text-lg text-center">
-      ← Back
-    </Link>
+  
   </div>
-  </div>
+
    
   );
 }

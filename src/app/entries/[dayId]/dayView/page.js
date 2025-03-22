@@ -13,6 +13,8 @@ export default function DayViewEntry() {
   const [error, setError] = useState(null);
   const router = useRouter();
   const [dayEntryId, setDayEntryId] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
 
   // Move the fetchDayEntry function outside of useEffect
   const fetchDayEntry = async () => {
@@ -78,10 +80,7 @@ export default function DayViewEntry() {
   }, []);
 
   const handleDelete = async () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this entry?");
-    if (!confirmDelete) return;
-
-    try {
+       try {
       const response = await fetch(`/api/entries/${dayEntryId}/delete/deleteFoodDay`, {
         method: 'DELETE',
       });
@@ -92,9 +91,10 @@ export default function DayViewEntry() {
         return;
       }
 
-      // If successful, redirect the user or show a success message
-      alert("Entry deleted successfully!");
-      router.push("/");  // Redirect to home or another page after deletion
+      setSuccessMessage("Entry deleted successfully! Redirecting...");
+      setTimeout(() => {
+        router.push("/entries");
+      }, 2000);
     } catch (error) {
       console.error("Error deleting entry:", error);
       setError("An unexpected error occurred while deleting.");
@@ -130,7 +130,7 @@ export default function DayViewEntry() {
   return (
     <div><Link href="/entries"><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-bluepurple"></i></Link>
 
-    <div className="relative min-h-screen bg-gradient-to-b from-achieve-white via-achieve-bluepurple p-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="relative min-h-screen bg-[url('/dayviewbg2.png')] bg-cover bg-center p-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       {/* Date Picker & Error Message */}
       <div className="w-full max-w-7xl mx-auto">
         {error && <div className="text-red-500">{error}</div>}
@@ -161,7 +161,7 @@ export default function DayViewEntry() {
       </div>
   
       {/* Weight Bar & Delete Button */}
-      <div className="w-full max-w-4xl mx-auto mt-12 flex flex-col">
+      <div className="w-full max-w-4xl mx-auto mt-12 flex flex-col items-center">
         <WeightBar
           date={selectedDate}
           weight={weight}
@@ -172,6 +172,7 @@ export default function DayViewEntry() {
           className="mt-10 w-48 p-3 bg-red-500 text-white rounded-lg text-lg font-semibold hover:bg-achieve-green transition">
           Delete Entry
         </button>
+        {successMessage && <p className="text-achieve-orange">{successMessage}</p>}
       </div>
     </div>
     </div>

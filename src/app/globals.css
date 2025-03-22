@@ -16,12 +16,32 @@
     --foreground: #ededed;
   }
 } */
+
+
 html{
   font-family: M PLUS Rounded 1c;
+  margin: 0;
+  padding: 0;
+
+  
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: 'M PLUS Rounded 1c', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Smooth transition for sliding effect */
+.transition-slide {
+  transition: transform 0.3s ease-out;
+  transform: translateY(-20px); /* Start with the content slightly above */
+  opacity: 0;
+}
+
+.transition-slide-visible {
+  transform: translateY(0); /* Bring content to its original position */
+  opacity: 1;
 }

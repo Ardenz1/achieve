@@ -16,7 +16,7 @@ export default {
         "achieve-bluepurple":"#B5E0FF",
         "achieve-grey": "#292C31",
         "achieve-white": "#FEFEFE",
-        "achieve-green": "#ADEAA7",
+        "achieve-green": "#B9FCBD",
         "achieve-darkgreen": "#B9FCBD",
         "achieve-orange2": "#FFDAA6",
         "achieve-darkorange": "#FEBA5A",

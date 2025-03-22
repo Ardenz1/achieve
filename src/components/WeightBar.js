@@ -10,8 +10,8 @@ const WeightBar = ({ weight, onSave }) => {
   };
 
   return (
-    <div className="bg-achieve-bluepurple sm:w-[80%] md:w-[40%] lg:w-[40%] p-4 mt-4 rounded-md text-white text-center items-center border">
-    <h1 className="text-2xl font-bold mb-10">Weight</h1>
+    <div className="bg-achieve-bluepurple  w-full md:w-[40%] lg:w-[40%] p-4 mt-10 rounded-md text-white text-center items-center border-achieve-white">
+    <h1 className="text-2xl text-achieve-grey font-bold mb-10">Weight</h1>
 
       <div className="flex justify-center mb-10">
         {isEditing ? (
@@ -34,9 +34,9 @@ const WeightBar = ({ weight, onSave }) => {
         ) : (
           // If not editing and weight exists, show the weight with the pencil icon
           <>
-            <span className="text-gray-200 text-center">{weight ? `${weight} lbs` : "Add weight"}</span>
+            <span className="text-achieve-grey text-center">{weight ? `${weight} lbs` : "Add weight"}</span>
             <i
-              className="fa-solid fa-pencil hover:text-achieve-green cursor-pointer ml-4"
+              className="fa-solid fa-pencil text-achieve-grey hover:text-achieve-green cursor-pointer ml-4"
               onClick={() => setIsEditing(true)} // Start editing when the pencil icon is clicked
             ></i>
           </>

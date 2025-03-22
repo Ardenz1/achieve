@@ -76,8 +76,8 @@ export default function Entry() {
   };
 
   return (
-    <div><Link href="/"><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-seagreen"></i></Link>
-    <div className="bg-gradient-to-b from-achieve-white via-achieve-seagreen grid items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div><Link href="/"><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-pink"></i></Link>
+    <div className="bg-[url('/allEntriesbg2.png')] bg-cover bg-center grid items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <h1 className="text-center text-4xl font-bold mb-4">All Entries</h1>
 
       <div className="flex items-center flex-row-reverse gap-4">
@@ -85,7 +85,7 @@ export default function Entry() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => setShowCalendar(!showCalendar)}
-          className="text-3xl text-achieve-seagreen cursor-pointer"
+          className="text-3xl text-achieve-bluepurple cursor-pointer hover:text-blue-300"
         >
           <i className="fa-solid fa-calendar-days"></i>
         </button>
@@ -97,8 +97,7 @@ export default function Entry() {
       {/* Create Entry Button */}
       <button
         onClick={handleCreateDayEntry}
-        className="bg-achieve-seagreen p-4 text-xl rounded-md hover:bg-achieve-yellow"
-      >
+        className="bg-achieve-bluepurple p-4 text-xl rounded-md hover:bg-blue-300">
         Add New Entry
       </button>
       </div>

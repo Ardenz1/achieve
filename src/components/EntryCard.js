@@ -15,8 +15,8 @@ const EntryCard = ({ entry }) => {
   return (
     <Link href={`/entries/${entry.id}/dayView`} passHref>
       <div className="flex flex-col items-center cursor-pointer">
-        <div className="relative w-full h-64 rounded-md bg-achieve-grey border-2 border-achieve-seagreen bg-opacity-70 text-white p-4 transition-transform duration-200 hover:scale-105">
-          <h1 className="bg-achieve-seagreen rounded-md p-2 absolute top-3 left-3 text-lg font-bold">
+        <div className="relative w-full h-64 rounded-md bg-achieve-white border-2 border-achieve-bluepurple bg-opacity-70 text-achieve-grey p-4 transition-transform duration-200 hover:scale-105">
+          <h1 className="bg-achieve-white rounded-md p-2 absolute top-3 left-3 text-lg font-bold">
             {formattedDate}
           </h1>
           <div className="flex flex-col h-full justify-center items-center">
@@ -38,7 +38,7 @@ const EntryCard = ({ entry }) => {
                 )}
               </div>
             ) : (
-              <p className="text-lg font-semibold text-gray-300">Add Information to get started!</p>
+              <p className="text-lg font-semibold text-achieve-grey">Add Information to get started!</p>
             )}
 
           </div>

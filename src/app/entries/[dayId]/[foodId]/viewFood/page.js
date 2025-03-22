@@ -179,7 +179,7 @@ export default function ViewFoodEntry() {
 
   return (
     <div><Link href={`/entries/${id}/dayView`}><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-yellow"></i></Link>
-    <div className="relative bg-gradient-to-b from-achieve-white via-achieve-yellow justify-items-center min-h-screen p-8 gap-8 sm:p-20 font-[family-name:var(--font-geist-sans)] flex flex-col items-center">
+    <div className="relative bg-[url('/foodviewbg.png')] bg-cover bg-center justify-items-center min-h-screen p-8 gap-8 sm:p-20 font-[family-name:var(--font-geist-sans)] flex flex-col items-center">
     <div className="w-full max-w-lg mt-5">
       <div className="flex items-center w-full">
         <input
