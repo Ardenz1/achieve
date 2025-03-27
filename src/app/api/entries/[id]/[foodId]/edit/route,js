@@ -6,81 +6,47 @@ export async function PUT(request, { params }) {
   console.log("Received foodId:", foodId);
 
   try {
+    // Ensure the data is correctly received in the request body
     const data = await request.json();
     console.log("Data received in PUT request:", data);
 
+    // Ensure foodId exists in the database before updating
+    const foodEntry = await prisma.foodEntry.findUnique({
+      where: { id: foodId },
+    });
+
+    if (!foodEntry) {
+      return new Response(
+        JSON.stringify({ error: "Food entry not found" }),
+        { status: 404 }
+      );
+    }
+
     // Update the food entry in the database
     const updatedFoodEntry = await prisma.foodEntry.update({
-      where: { id: foodId},
+      where: { id: foodId },
       data: {
-        mealName: data.mealName,
+        amount: data.amount,
         calories: data.calories,
         carbs: data.carbs,
-        protein: data.protein,
         fat: data.fat,
         fiber: data.fiber,
-        sugar: data.sugar,
-        sodium: data.sodium,
-        units: data.units,
-        amount: data.amount,
+        mealName: data.mealName,
+        protein: data.protein,
         servingSize: data.servingSize,
+        sodium: data.sodium,
+        sugar: data.sugar,
+        units: data.units,
       },
     });
 
-    if (!updatedFoodEntry) {
-      return new Response(JSON.stringify({ error: "Food entry not found" }), { status: 404 });
-    }
+    // Return the updated food entry
     return new Response(JSON.stringify(updatedFoodEntry), { status: 200 });
   } catch (error) {
     console.error("Error updating food entry:", error);
-    return new Response(JSON.stringify({ error: "Internal server error." }), { status: 500 });
+    return new Response(
+      JSON.stringify({ error: "Internal server error." }),
+      { status: 500 }
+    );
   }
 }
-
-
-
-// import prisma from "@/database/client";
-
-// export async function PUT(request, { params }) {
-//   const { id, foodId } = params;
-//   console.log("Received id:", id);
-//   console.log("Received foodId:", foodId);
-
-//   try {
-//     const data = await request.json();
-//     console.log("Data received in PUT request:", data);
-
-//     // Update the food entry in the database
-//     const updatedFoodEntry = await prisma.foodEntry.update({
-//       where: { id: parseInt(foodId)},
-//       data: {
-//         mealName: data.mealName,
-//         calories: data.calories,
-//         carbs: data.carbs,
-//         protein: data.protein,
-//         fat: data.fat,
-//         fiber: data.fiber,
-//         sugar: data.sugar,
-//         sodium: data.sodium,
-//         units: data.units,
-//         amount: data.amount,
-//         servingSize: data.servingSize,
-//         // CalcCalories: data.CalcCalories,
-//         // CalcCarbs: data.CalcCarbs,
-//         // CalcProtein: data.CalcProtein,
-//         // CalcFat: data.CalcFat,
-//         // CalcFiber: data.CalcFiber,
-//         // CalcSugar: data.CalcSugar,
-//         // CalcSodium: data.CalcSodium,
-//       },
-//     });
-
-//     if (!updatedFoodEntry) {
-//       return new Response(JSON.stringify({ error: "Food entry not found" }), { status: 404 });
-//     }
-//     return new Response(JSON.stringify(updatedFoodEntry), { status: 200 });
-//   } catch (error) {
-//     console.error("Error updating food entry:", error);
-//     return new Response(JSON.stringify({ error: "Internal server error." }), { status: 500 });
-//   }
-// }

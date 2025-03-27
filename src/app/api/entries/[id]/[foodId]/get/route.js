@@ -3,8 +3,6 @@ import prisma from "@/database/client";
 
 export async function GET(request, { params }) {
   const { id, foodId } = await params; // Extract both dayId and foodId from params
-  console.log('Received API request for GET with dayId:', id, 'and foodId:', foodId);
-
   try {
     const foodEntry = await prisma.foodEntry.findUnique({
       where: {

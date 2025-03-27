@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from "react";
 import Link from 'next/link';
+console.log("hello!!");
 
 export default function ViewFoodEntry() {
   const [userId, setUserId] = useState(null);
@@ -18,7 +19,9 @@ export default function ViewFoodEntry() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [id, setDayid] = useState(null);
-  const [foodId, setfoodId] = useState(null); // Track the food entry ID for updating
+  const [foodId, setfoodId] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -56,21 +59,26 @@ export default function ViewFoodEntry() {
   }, []);
 
   useEffect(() => {
-    const path = window.location.pathname;
-    const match = path.match(/\/entries\/([^/]+)\/([^/]+)\/viewFood/);
-    if (match && match[1] && match[2]) {
-      const id = match[1];
-      const foodId = match[2];
-      setDayid(id);
-      setfoodId(foodId);
-      console.log("Extracted dayId:", id);
-      console.log("Extracted foodId:", foodId);
-      fetchFoodEntry(id, foodId);
+    if (typeof window !== "undefined") {
+      const path = window.location.pathname;
+      const match = path.match(/\/entries\/([^/]+)\/([^/]+)\/viewFood/);
+  
+      if (match && match[1] && match[2]) {
+        const id = match[1];
+        const foodId = match[2];
+        setDayid(id);
+        setfoodId(foodId);
+        console.log("Extracted dayId:", id);
+        console.log("Extracted foodId:", foodId);
+  
+        // Fetch the food entry
+        fetchFoodEntry(id, foodId);
+      }
     }
   }, []);
   
-
   const fetchFoodEntry = async (id, foodId) => {
+    console.log("starting fetch for entries with", id, foodId);
     try {
       const response = await fetch(`/api/entries/${id}/${foodId}/get`, {
         method: 'GET',
@@ -78,7 +86,7 @@ export default function ViewFoodEntry() {
       });
 
       const data = await response.json();
-      console.log("Fetched food entry data:", data); // Log the fetched food data
+      console.log("Fetched food entry data:", data); 
 
       if (!response.ok) {
         console.error("Error fetching food entry:", data.error);
@@ -107,23 +115,23 @@ export default function ViewFoodEntry() {
     setError(null);
   
     try {
-      const response = await fetch(`/api/entries/${id}/${foodId}/update`, {
+      const response = await fetch(`/api/entries/${id}/${foodId}/edit`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          mealName,
+          amount,
           calories,
           carbs,
-          protein,
           fat,
           fiber,
-          sugar,
-          sodium,
-          units,
-          amount,
+          mealName,
+          protein,
           servingSize,
+          sodium,
+          sugar,
+          units,
         }),
       });
   
@@ -155,24 +163,24 @@ export default function ViewFoodEntry() {
   
 
    const handleDelete = async (id, foodId) => {
-    if (confirm("Are you sure you want to delete this food entry?")) {
       try {
         const response = await fetch(`/api/entries/${id}/${foodId}/delete`, {
           method: "DELETE",
         });
 
         if (!response.ok) {
-          const errorData = await response.text();
-          console.error("Error from API:", errorData);
-          throw new Error("Failed to delete food entry");
+          const data = await response.json();
+          setError(data.error || "Failed to delete entry.");
+          return;
         }
-
-        console.log("Food entry deleted successfully");
-        window.location.href = `/entries/${id}/dayView`; 
+  
+        setSuccessMessage("Entry deleted successfully! Redirecting...");
+        setTimeout(() => {
+          window.location.href = `/entries/${id}/dayView`;
+        }, 2000);
       } catch (error) {
-        console.error("Error in delete request:", error);
-        setError("Failed to delete food entry.");
-      }
+        console.error("Error deleting entry:", error);
+        setError("An unexpected error occurred while deleting.");
     }
   };
   
@@ -264,7 +272,7 @@ export default function ViewFoodEntry() {
       <button onClick={() => handleDelete(id, foodId)}>
       <i className="text-red-500 text-3xl fa-solid fa-trash cursor-pointer hover:text-red-800"></i></button>
     </div>
-  
+    {successMessage && <p className="text-achieve-orange">{successMessage}</p>}
     {error && <p className="text-red-500 ">{error}</p>}
   </div>
   </div>
