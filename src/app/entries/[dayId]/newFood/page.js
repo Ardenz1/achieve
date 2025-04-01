@@ -63,89 +63,96 @@ export default function NewFoodEntry() {
     }
   }, []);
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    setError(null);
+ const handleSubmit = async () => {
+  if (!userId) {
+    console.error("User ID is missing. Cannot submit the form.");
+    setError("User not found. Please refresh and try again.");
+    return;
+  }
 
-      // Convert input values
-      const parsedAmount = parseFloat(amount) || 0;
-      const parsedServingSize = parseFloat(servingSize) || 0;
-    
-      // Perform calculations
-      const calculatedCalories = (parsedAmount / parsedServingSize) * parseFloat(calories) || 0;
-      const calculatedCarbs = (parsedAmount / parsedServingSize) * parseFloat(carbs) || 0;
-      const calculatedProtein = (parsedAmount / parsedServingSize) * parseFloat(protein) || 0;
-      const calculatedFat = (parsedAmount / parsedServingSize) * parseFloat(fat) || 0;
-      const calculatedFiber = (parsedAmount / parsedServingSize) * parseFloat(fiber) || 0;
-      const calculatedSugar = (parsedAmount / parsedServingSize) * parseFloat(sugar) || 0;
-      const calculatedSodium = (parsedAmount / parsedServingSize) * parseFloat(sodium) || 0;
+  setLoading(true);
+  setError(null);
 
-    const data = {
-      userId,
-      dayId, 
-      mealName: mealName.trim(),
-      calories: parseFloat(calories) || 0,
-      carbs: parseFloat(carbs) || 0,
-      protein: parseFloat(protein) || 0,
-      fat: parseFloat(fat) || 0,
-      fiber: parseFloat(fiber) || 0,
-      sugar: parseFloat(sugar) || 0,
-      sodium: parseFloat(sodium) || 0,
-      units,
-      amount: parseFloat(amount) || 0,
-      servingSize: parseFloat(servingSize) || 0,
-      date: new Date(),
-      CalcCalories: parseFloat(calculatedCalories) || 0,
-      CalcCarbs: parseFloat(calculatedCarbs) || 0,
-      CalcProtein: parseFloat(calculatedProtein) || 0,
-      CalcFat: parseFloat(calculatedFat) || 0,
-      CalcFiber: parseFloat(calculatedFiber) || 0,
-      CalcSugar: parseFloat(calculatedSugar) || 0,
-      CalcSodium: parseFloat(calculatedSodium) || 0,
-    };
+  // Convert input values
+  const parsedAmount = parseFloat(amount) || 0;
+  const parsedServingSize = parseFloat(servingSize) || 0;
 
-    console.log("Data to submit:", data);
+  // Perform calculations
+  const calculatedCalories = (parsedAmount / parsedServingSize) * parseFloat(calories) || 0;
+  const calculatedCarbs = (parsedAmount / parsedServingSize) * parseFloat(carbs) || 0;
+  const calculatedProtein = (parsedAmount / parsedServingSize) * parseFloat(protein) || 0;
+  const calculatedFat = (parsedAmount / parsedServingSize) * parseFloat(fat) || 0;
+  const calculatedFiber = (parsedAmount / parsedServingSize) * parseFloat(fiber) || 0;
+  const calculatedSugar = (parsedAmount / parsedServingSize) * parseFloat(sugar) || 0;
+  const calculatedSodium = (parsedAmount / parsedServingSize) * parseFloat(sodium) || 0;
 
-    try {
-      const response = await fetch(`/api/entries/${dayId}/createFoodEntry`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json(); // Capture the error response
-        console.error("Error from API:", errorData.error);
-        throw new Error("Failed to save food entry");
-      }
-
-      const result = await response.json();
-      console.log("Saved food entry:", result);
-      // Clear form after successful submission
-      setmealName("");
-      setCalories("");
-      setCarbs("");
-      setProtein("");
-      setFat("");
-      setFiber("");
-      setSugar("");
-      setSodium("");
-      setUnits("grams");
-      setAmount("");
-      setServingSize("");
-
-      window.location.href = `/entries/${dayId}/dayView`;
-
-    } catch (error) {
-      console.error("Error:", error);
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  const data = {
+    userId,
+    dayId, 
+    mealName: mealName.trim(),
+    calories: parseFloat(calories) || 0,
+    carbs: parseFloat(carbs) || 0,
+    protein: parseFloat(protein) || 0,
+    fat: parseFloat(fat) || 0,
+    fiber: parseFloat(fiber) || 0,
+    sugar: parseFloat(sugar) || 0,
+    sodium: parseFloat(sodium) || 0,
+    units,
+    amount: parseFloat(amount) || 0,
+    servingSize: parseFloat(servingSize) || 0,
+    date: new Date(),
+    CalcCalories: parseFloat(calculatedCalories) || 0,
+    CalcCarbs: parseFloat(calculatedCarbs) || 0,
+    CalcProtein: parseFloat(calculatedProtein) || 0,
+    CalcFat: parseFloat(calculatedFat) || 0,
+    CalcFiber: parseFloat(calculatedFiber) || 0,
+    CalcSugar: parseFloat(calculatedSugar) || 0,
+    CalcSodium: parseFloat(calculatedSodium) || 0,
   };
+
+  console.log("Data to submit:", data);
+
+  try {
+    const response = await fetch(`/api/entries/${dayId}/createFoodEntry`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json(); // Capture the error response
+      console.error("Error from API:", errorData.error);
+      throw new Error("Failed to save food entry");
+    }
+
+    const result = await response.json();
+    console.log("Saved food entry:", result);
+    
+    // Clear form after successful submission
+    setmealName("");
+    setCalories("");
+    setCarbs("");
+    setProtein("");
+    setFat("");
+    setFiber("");
+    setSugar("");
+    setSodium("");
+    setUnits("grams");
+    setAmount("");
+    setServingSize("");
+
+    window.location.href = `/entries/${dayId}/dayView`;
+
+  } catch (error) {
+    console.error("Error:", error);
+    setError("Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div><Link href={`/entries/${dayId}/dayView`}><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-yellow"></i></Link>
@@ -158,7 +165,7 @@ export default function NewFoodEntry() {
             value={mealName}
             onChange={(e) => setmealName(e.target.value)} 
             className="bg-achieve-grey text-xl font-semibold text-achieve-white outline-none p-2 mb-1 rounded w-full"
-            placeholder="Food Title goes here"
+            placeholder="Food Name"
           />
           <i className="fa-solid fa-camera text-2xl cursor-pointer hover:text-achieve-green ml-4"></i>
         </div>
@@ -196,6 +203,7 @@ export default function NewFoodEntry() {
             <option value="milligrams">mg</option>
             <option value="ounces">oz</option>
             <option value="cups">cups</option>
+            <option value="cups">each</option>
           </select>
         </div>
 

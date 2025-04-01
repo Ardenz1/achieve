@@ -30,7 +30,7 @@ model DayEntry {
   userId        String                              // User who owns this day log
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  date          DateTime @unique                    // Date of the entry (e.g., 1/22/25)
+  date          DateTime                    // Date of the entry (e.g., 1/22/25)
   weight        Float?                              // User's weight for that day (optional)
 
   // Summarized Nutrition Data

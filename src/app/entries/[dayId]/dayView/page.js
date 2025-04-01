@@ -5,18 +5,19 @@ import SummaryCard from "@/components/SummaryCard";
 import WeightBar from "@/components/WeightBar";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import ConfirmDeleteModal from '@/components/ConfirmDeleteModal'; // Import the modal
 
 export default function DayViewEntry() {
   const [selectedDate, setSelectedDate] = useState("");
-  const [weight, setWeight] = useState(null);  // Initialize as null to ensure we fetch the correct value
+  const [weight, setWeight] = useState(null);
   const [foodEntries, setFoodEntries] = useState([]);
   const [error, setError] = useState(null);
   const router = useRouter();
   const [dayEntryId, setDayEntryId] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // State to control modal visibility
 
-
-  // Move the fetchDayEntry function outside of useEffect
   const fetchDayEntry = async () => {
     const { pathname } = window.location;
     const id = pathname.split('/').slice(-2, -1)[0];
@@ -40,8 +41,8 @@ export default function DayViewEntry() {
 
       if (data) {
         setSelectedDate(data.date.split("T")[0]);
-        setWeight(data.weight); 
-        setFoodEntries(data.foodEntries);  // Set foodEntries from the response
+        setWeight(data.weight);
+        setFoodEntries(data.foodEntries);
       } else {
         setError("Data not found.");
       }
@@ -51,7 +52,6 @@ export default function DayViewEntry() {
     }
   };
 
-  // Calculate nutritional totals
   const calculateTotals = (foodEntries) => {
     return foodEntries.reduce((totals, food) => {
       totals.Calories += food.CalcCalories || 0;
@@ -80,7 +80,7 @@ export default function DayViewEntry() {
   }, []);
 
   const handleDelete = async () => {
-       try {
+    try {
       const response = await fetch(`/api/entries/${dayEntryId}/delete/deleteFoodDay`, {
         method: 'DELETE',
       });
@@ -101,7 +101,6 @@ export default function DayViewEntry() {
     }
   };
 
-  // Function to save the updated weight and re-fetch the day entry
   const handleWeightSave = async (newWeight) => {
     try {
       const response = await fetch(`/api/entries/${dayEntryId}/edit/editWeight`, {
@@ -118,64 +117,80 @@ export default function DayViewEntry() {
         return;
       }
 
-      const data = await response.json();
       await fetchDayEntry();
-
     } catch (error) {
       console.error("Error updating weight:", error);
       setError("An unexpected error occurred while updating the weight.");
     }
   };
 
-  return (
-    <div><Link href="/entries"><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-bluepurple"></i></Link>
+  const confirmDelete = () => {
+    setShowDeleteModal(true);
+  };
 
-    <div className="relative min-h-screen bg-[url('/dayviewbg2.png')] bg-cover bg-center p-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {/* Date Picker & Error Message */}
-      <div className="w-full max-w-7xl mx-auto">
-        {error && <div className="text-red-500">{error}</div>}
-        <div className="bg-achieve-bluepurple p-4 rounded-lg inline-block text-3xl">
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            className="bg-transparent text-achieve-grey text-3xl outline-none"
-            readOnly
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  return (
+    <div>
+      <Link href="/entries">
+        <i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-bluepurple"></i>
+      </Link>
+
+      <div className="relative min-h-screen bg-[url('/dayviewbg2.png')] bg-cover bg-center p-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+        {/* Date Picker & Error Message */}
+        <div className="w-full max-w-7xl mx-auto">
+          {/* {error && <div className="text-blue-500">{error}</div>} */}
+          <div className="bg-achieve-bluepurple p-4 rounded-lg inline-block text-3xl">
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="bg-transparent text-achieve-grey text-3xl outline-none"
+              readOnly
+            />
+          </div>
+        </div>
+    
+        {/* Summary & Meal History */}
+        <div className="w-full max-w-7xl mx-auto mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <SummaryCard
+            calories={totals.Calories}
+            carbs={totals.Carbs}
+            protein={totals.Protein}
+            fat={totals.Fat}
+            fiber={totals.Fiber}
+            sugar={totals.Sugar}
+            sodium={totals.Sodium}
+            date={selectedDate}
           />
+          <MealHistoryCard dayId={dayEntryId} date={selectedDate} weight={weight} />
+        </div>
+    
+        {/* Weight Bar & Delete Button */}
+        <div className="w-full max-w-4xl mx-auto mt-12 flex flex-col items-center">
+          <WeightBar
+            date={selectedDate}
+            weight={weight}
+            onSave={handleWeightSave}
+          />
+          <button 
+            onClick={confirmDelete}
+            className="mt-10 w-48 p-3 bg-red-500 text-white rounded-lg text-lg font-semibold hover:bg-achieve-green transition"
+          >
+            Delete Entry
+          </button>
+          {successMessage && <p className="text-achieve-orange">{successMessage}</p>}
         </div>
       </div>
-  
-      {/* Summary & Meal History */}
-      <div className="w-full max-w-7xl mx-auto mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
-        <SummaryCard 
-          calories={totals.Calories}
-          carbs={totals.Carbs}
-          protein={totals.Protein}
-          fat={totals.Fat}
-          fiber={totals.Fiber}
-          sugar={totals.Sugar}
-          sodium={totals.Sodium}
-          date={selectedDate} 
-        />
-        <MealHistoryCard dayId={dayEntryId} date={selectedDate} weight={weight} />
-      </div>
-  
-      {/* Weight Bar & Delete Button */}
-      <div className="w-full max-w-4xl mx-auto mt-12 flex flex-col items-center">
-        <WeightBar
-          date={selectedDate}
-          weight={weight}
-          onSave={handleWeightSave}
-        />
-        <button 
-          onClick={handleDelete} 
-          className="mt-10 w-48 p-3 bg-red-500 text-white rounded-lg text-lg font-semibold hover:bg-achieve-green transition">
-          Delete Entry
-        </button>
-        {successMessage && <p className="text-achieve-orange">{successMessage}</p>}
-      </div>
-    </div>
+
+      {/* Custom Delete Confirmation Modal */}
+      <ConfirmDeleteModal
+        show={showDeleteModal}
+        onConfirm={handleDelete}
+        onCancel={cancelDelete}
+      />
     </div>
   );
-  
 }

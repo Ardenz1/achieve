@@ -15,6 +15,7 @@ export default function Info() {
         <h4 className="font-bold text-xl mt-10">Math</h4>
         <p>A healthy daily calorie intake typically ranges from 1,600 to 3,000 calories, depending on factors like age, sex, activity level, and overall health. Based on the Dietary Guidelines for Americans, this app uses a 2,000-calorie daily average as a reference point.</p>
         <p>The calculations are straightforward: <br></br> (Amount / Serving Size) × Calories, Protein, Fat, etc. <br></br> This helps provide a clear breakdown of your daily intake based on the portions you consume.</p>
+       <br></br> <p> If you only want to track one of the nutrients like protien, simply enter calories per serving, amount consumed and serving size, plus the nutrient you want to track. </p>
         <h4 className="font-bold text-xl mt-10">Sources</h4>
         <p>*https://www.dietaryguidelines.gov/</p>
         </div>

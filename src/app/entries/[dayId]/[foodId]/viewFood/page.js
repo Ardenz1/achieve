@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import Link from 'next/link';
 console.log("hello!!");
 
@@ -21,6 +22,8 @@ export default function ViewFoodEntry() {
   const [id, setDayid] = useState(null);
   const [foodId, setfoodId] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
 
 
   useEffect(() => {
@@ -110,7 +113,7 @@ export default function ViewFoodEntry() {
     }
   };
 
-  const handleUpdate = async (id, foodId) => {
+  const PUT = async (id, foodId) => {
     setLoading(true);
     setError(null);
   
@@ -162,27 +165,36 @@ export default function ViewFoodEntry() {
   };
   
 
-   const handleDelete = async (id, foodId) => {
-      try {
-        const response = await fetch(`/api/entries/${id}/${foodId}/delete`, {
-          method: "DELETE",
-        });
+  const confirmDelete = () => {
+    setShowDeleteModal(true); // Show the delete confirmation modal
+  };
 
-        if (!response.ok) {
-          const data = await response.json();
-          setError(data.error || "Failed to delete entry.");
-          return;
-        }
-  
-        setSuccessMessage("Entry deleted successfully! Redirecting...");
-        setTimeout(() => {
-          window.location.href = `/entries/${id}/dayView`;
-        }, 2000);
-      } catch (error) {
-        console.error("Error deleting entry:", error);
-        setError("An unexpected error occurred while deleting.");
+  const cancelDelete = () => {
+    setShowDeleteModal(false); // Close the modal without deleting
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`/api/entries/${id}/${foodId}/delete`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || "Failed to delete entry.");
+        return;
+      }
+
+      setSuccessMessage("Entry deleted successfully! Redirecting...");
+      setTimeout(() => {
+        window.location.href = `/entries/${id}/dayView`; // Redirect after success
+      }, 2000);
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+      setError("An unexpected error occurred while deleting.");
     }
   };
+
   
 
   return (
@@ -266,14 +278,20 @@ export default function ViewFoodEntry() {
     <div className="flex items-center justify-center gap-4 ">
       <button 
         className="text-lg font-semibold bg-achieve-grey text-achieve-white rounded-lg p-4 px-8 hover:bg-achieve-yellow"
-        onClick={() => handleUpdate(id, foodId)}>
+        onClick={() => PUT(id, foodId)}>
         {loading ? "Saving..." : "Save"}
       </button>
-      <button onClick={() => handleDelete(id, foodId)}>
+      <button onClick={() => confirmDelete(id, foodId)}>
       <i className="text-red-500 text-3xl fa-solid fa-trash cursor-pointer hover:text-red-800"></i></button>
     </div>
     {successMessage && <p className="text-achieve-orange">{successMessage}</p>}
     {error && <p className="text-red-500 ">{error}</p>}
+
+    <ConfirmDeleteModal
+        show={showDeleteModal}
+        onConfirm={handleDelete}
+        onCancel={cancelDelete}
+      />
   </div>
   </div>
   );

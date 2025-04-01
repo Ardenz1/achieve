@@ -22,6 +22,7 @@ const WeightBar = ({ weight, onSave }) => {
               value={newWeight}
               onChange={(e) => setNewWeight(e.target.value)}
               className="text-achieve-grey text-center p-2 rounded-md"
+               min="1"
               placeholder="Enter weight"
             />
             <button

@@ -85,17 +85,28 @@ export default function Home() {
 
   const handleCreateDayEntry = async () => {
     const token = localStorage.getItem("token");
-  
-    // Get today's date in 'YYYY-MM-DD' format
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0]; // Ensure YYYY-MM-DD format
   
     try {
+      // Check if an entry for today already exists
+      const checkResponse = await fetch(`/api/entries/getDayEntry?date=${today}`);
+      const existingEntry = await checkResponse.json();
+  
+      console.log("Existing Entry:", existingEntry);
+  
+      if (existingEntry && existingEntry.id) { // Adjust this check to match your backend response
+        console.log("Entry already exists. Redirecting...");
+        router.push("/entries"); // Redirect if entry exists
+        return;
+      }
+  
+      // If no entry exists, proceed to create a new one
       const response = await fetch("/api/entries/createFoodDay", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ token, date: today }), // Use today's date
+        body: JSON.stringify({ token, date: today }),
       });
   
       if (!response.ok) {
@@ -105,16 +116,16 @@ export default function Home() {
       }
   
       const data = await response.json();
-      console.log("Full API Response:", data);
-      console.log("Returned Date from API:", data.date);
+      console.log("Created new entry:", data);
   
-      const newDayEntryId = data.dayEntryId;
-      router.push(`/entries/newDay?dayEntryId=${newDayEntryId}`);
+      router.push(`/entries/newDay?dayEntryId=${data.id}`); // Ensure correct redirection
     } catch (error) {
       console.error("Error creating day entry:", error);
       setError("An unexpected error occurred.");
     }
   };
+  
+  
 // bg-gradient-to-b from-achieve-white via-achieve-pink to-achieve-white 
   return (
     <div>

@@ -13,7 +13,10 @@ export default function Entry() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) return;
+    if (!token) {
+      router.push('/welcome');
+      return;
+    }
 
     const decodeToken = (token) => {
       const base64Url = token.split(".")[1];
@@ -76,11 +79,24 @@ export default function Entry() {
   };
 
   return (
-    <div><Link href="/"><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-pink"></i></Link>
-    <div className="bg-[url('/allEntriesbg2.png')] bg-cover bg-center grid items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    // <div><Link href="/"><i className="pl-10 pt-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-pink"></i></Link>
+    <div className="relative bg-[url('/allEntriesbg2.png')] bg-cover bg-center grid items-center justify-items-center  p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <Link href="/">
+          <i className="absolute top-5 left-5 text-2xl fa-solid fa-arrow-left hover:text-achieve-pink"></i>
+        </Link>
       <h1 className="text-center text-4xl font-bold mb-4">All Entries</h1>
 
       <div className="flex items-center flex-row-reverse gap-4">
+
+      <div>    {/* Calendar Input */}
+      {showCalendar && (
+        <input
+          type="date"
+          className="border p-2 rounded-md text-lg"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+        />
+      )} </div>
       {/* Date Picker Section */}
       <div className="flex items-center gap-4">
         <button
@@ -100,21 +116,12 @@ export default function Entry() {
         className="bg-achieve-bluepurple p-4 text-xl rounded-md hover:bg-blue-300">
         Add New Entry
       </button>
-      </div>
+       </div>
       
-      {/* Calendar Input */}
-      {showCalendar && (
-        <input
-          type="date"
-          className="border p-2 rounded-md text-lg"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-        />
-      )}
-
+  
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-7xl px-4">
+      <div className="grid min-h-screen grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-7xl px-4">
 
       {/* Entries List */}
       {entries.map((entry, index) => (
@@ -122,6 +129,6 @@ export default function Entry() {
       ))}
       </div>
     </div>
-    </div>
+    // </div>
   );
 }

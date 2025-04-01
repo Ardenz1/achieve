@@ -87,7 +87,7 @@ export default function NewEntry() {
 
       <div className="relative min-h-screen bg-[url('/dayviewbg2.png')] bg-cover bg-center p-8 sm:p-20">
         <div className="w-full max-w-7xl mx-auto">
-          {error && <div className="text-red-500">{error}</div>}
+          {/* {error && <div className="text-red-500">{error}</div>} */}
           <div className="bg-achieve-bluepurple p-4 rounded-lg inline-block text-3xl">
             <input
               type="date"

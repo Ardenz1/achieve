@@ -13,7 +13,9 @@ const CaloriesHomeCard = ({ totalCalories, calorieGoal = 2000, today }) => {
   // Calculate the circumference of the circle with the original radius
   const radius = 90; // radius of the circle (same as before)
   const circumference = 2 * Math.PI * radius; // circumference of the circle
-  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+
+  // If totalCalories exceed the goal, set strokeDashoffset to 0 for a full circle
+  const strokeDashoffset = totalCalories > calorieGoal ? 0 : circumference - (percentage / 100) * circumference;
 
   // Adjust this value to change the starting point of the progress (in degrees)
   const startAngle = -90; // This rotates the circle to start from the top (12 o'clock)
@@ -60,6 +62,7 @@ const CaloriesHomeCard = ({ totalCalories, calorieGoal = 2000, today }) => {
 };
 
 export default CaloriesHomeCard;
+
 
 
 
