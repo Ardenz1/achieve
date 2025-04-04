@@ -113,32 +113,53 @@ export default function ViewFoodEntry() {
     }
   };
 
-  const PUT = async (id, foodId) => {
+  const handleUpdate = async (id, foodId) => {
     setLoading(true);
     setError(null);
   
     try {
+      // Convert input values
+      const parsedAmount = parseFloat(amount) || 0;
+      const parsedServingSize = parseFloat(servingSize) || 0;
+  
+      // Perform calculations
+      const calculatedCalories = (parsedAmount / parsedServingSize) * parseFloat(calories) || 0;
+      const calculatedCarbs = (parsedAmount / parsedServingSize) * parseFloat(carbs) || 0;
+      const calculatedProtein = (parsedAmount / parsedServingSize) * parseFloat(protein) || 0;
+      const calculatedFat = (parsedAmount / parsedServingSize) * parseFloat(fat) || 0;
+      const calculatedFiber = (parsedAmount / parsedServingSize) * parseFloat(fiber) || 0;
+      const calculatedSugar = (parsedAmount / parsedServingSize) * parseFloat(sugar) || 0;
+      const calculatedSodium = (parsedAmount / parsedServingSize) * parseFloat(sodium) || 0;
+  
+      // Send update request
       const response = await fetch(`/api/entries/${id}/${foodId}/edit`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          amount,
-          calories,
-          carbs,
-          fat,
-          fiber,
-          mealName,
-          protein,
-          servingSize,
-          sodium,
-          sugar,
+          amount: parsedAmount,
+          servingSize: parsedServingSize,
+          calories: parseFloat(calories) || 0,
+          carbs: parseFloat(carbs) || 0,
+          fat: parseFloat(fat) || 0,
+          fiber: parseFloat(fiber) || 0,
+          mealName: mealName.trim(),
+          protein: parseFloat(protein) || 0,
+          sodium: parseFloat(sodium) || 0,
+          sugar: parseFloat(sugar) || 0,
           units,
+          CalcCalories: calculatedCalories,
+          CalcCarbs: calculatedCarbs,
+          CalcProtein: calculatedProtein,
+          CalcFat: calculatedFat,
+          CalcFiber: calculatedFiber,
+          CalcSugar: calculatedSugar,
+          CalcSodium: calculatedSodium,
         }),
       });
   
-      const responseText = await response.text(); // Get the raw response
+      const responseText = await response.text();
   
       if (!response.ok) {
         console.error("API Error:", responseText);
@@ -147,7 +168,7 @@ export default function ViewFoodEntry() {
       }
   
       try {
-        const data = JSON.parse(responseText); // Safely parse if it's JSON
+        const data = JSON.parse(responseText);
         console.log("Updated food entry:", data);
         window.location.href = `/entries/${id}/dayView`;
       } catch (jsonError) {
@@ -163,6 +184,7 @@ export default function ViewFoodEntry() {
       setLoading(false);
     }
   };
+  
   
 
   const confirmDelete = () => {
@@ -278,8 +300,8 @@ export default function ViewFoodEntry() {
     <div className="flex items-center justify-center gap-4 ">
       <button 
         className="text-lg font-semibold bg-achieve-grey text-achieve-white rounded-lg p-4 px-8 hover:bg-achieve-yellow"
-        onClick={() => PUT(id, foodId)}>
-        {loading ? "Saving..." : "Save"}
+        onClick={() => handleUpdate(id, foodId)}>
+        {loading ? "Saving..." : "update"}
       </button>
       <button onClick={() => confirmDelete(id, foodId)}>
       <i className="text-red-500 text-3xl fa-solid fa-trash cursor-pointer hover:text-red-800"></i></button>
