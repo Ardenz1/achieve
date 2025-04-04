@@ -4,9 +4,9 @@ export default function WelcomePage() {
     return (
       <div className="relative h-screen overflow-hidden">
           <img
-        src="icon.svg"
+        src="iconNew.svg"
         alt="Logo"
-        className="absolute top-8 left-6 transform -translate-x-1/2 -translate-y-1/2 md:w-[1000px] md:h-auto"
+        className="absolute top-8 left-6 transform -translate-x-1/2 -translate-y-1/2 md:w-[900px] md:h-auto"
       />
         <div className="relative h-screen flex flex-col items-center justify-center p-10"> 
         <h1 className="text-center font-bold mb-4 sm:w-[300px]  md:text-4xl md:w-[500px] break-words">
@@ -23,7 +23,7 @@ export default function WelcomePage() {
       </div>
       </div>
       <img
-        src="icon.svg"
+        src="iconNew.svg"
         alt="Logo"
         className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 md:w-[800px] md:text-2xl md:h-100 lg:w-[800px] lg:h-100 z-0 pointer-events-none"
         />

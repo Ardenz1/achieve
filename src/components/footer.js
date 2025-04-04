@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <div className="bg-achieve-white  pb-5 flex justify-center items-center relative px-5 overflow-hidden">
+    <div className="bg-achieve-white shadow-[-2px_-4px_6px_rgba(0,0,0,0.1)] pb-5 flex justify-center items-center relative px-5 overflow-hidden">
       <h1 className="text-achieve-grey text-sm font-bold pt-3 z-10">
         Achieve Your Health Goals, One Step at a Time.
       </h1>

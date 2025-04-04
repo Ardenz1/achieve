@@ -187,8 +187,14 @@ export default function NewFoodEntry() {
             <h3 className="text-lg font-thin">{nutrient.label}</h3>
             <input
               type="text"
-              placeholder={`0 ${nutrient.unit || "g"}`}              value={nutrient.state}
-              onChange={(e) => nutrient.setState(e.target.value)}
+              placeholder={`0 ${nutrient.unit || "g"}`}              
+              value={nutrient.state}
+              onChange={(e) => {
+                const value = e.target.value.trim();
+                if (/^\d*\.?\d*$/.test(value)) {
+                  nutrient.setState(value);
+                }
+              }}
               className={`bg-transparent border ${nutrient.color} rounded-md p-2 outline-none w-full`}
             />
           </div>
@@ -208,26 +214,45 @@ export default function NewFoodEntry() {
         </div>
 
         <div className="mb-4 w-full">
+          <h3 className="text-lg font-thin">Serving Size</h3>
+          <input
+            type="text"
+            placeholder="e.g., 2"
+            value={servingSize}
+            onChange={(e) => {
+              const value = e.target.value;
+              // Allow only numbers and decimals
+              if (/^\d*\.?\d*$/.test(value)) {
+                setServingSize(value);
+              }
+            }}
+            className="bg-transparent border border-achieve-white rounded-md p-2 outline-none w-full"
+          />
+          {/* Show error message only when the input is invalid and non-empty */}
+          {servingSize && servingSize.trim() !== "" && !/^\d*\.?\d*$/.test(servingSize) && (
+            <p className="text-red-500 text-sm mt-1">Please enter a valid number.</p>
+          )}
+        </div>
+
+
+        <div className="mb-4 w-full">
           <h3 className="text-lg font-thin">Amount Consumed</h3>
           <input
             type="text"
             placeholder="0"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              // Allow only numbers and decimals
+              if (/^\d*\.?\d*$/.test(value)) {
+                setAmount(value);
+              }
+            }}
             className="bg-transparent border border-achieve-white rounded-md p-2 outline-none w-full"
           />
         </div>
 
-        <div className="mb-4 w-full">
-          <h3 className="text-lg font-thin">Serving Size</h3>
-          <input
-            type="text"
-            placeholder="e.g., 1 cup"
-            value={servingSize}
-            onChange={(e) => setServingSize(e.target.value)}
-            className="bg-transparent border border-achieve-white rounded-md p-2 outline-none w-full"
-          />
-        </div>
+     
       </div>
       
       <p className="text-sm text-gray-500 mt-2">*As soon as you hit save, calculations will be done</p>

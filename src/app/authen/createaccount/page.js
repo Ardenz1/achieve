@@ -69,9 +69,9 @@ export default function CreateAccount() {
   return (
     <div>
       <img
-        src="/icon.svg"
+        src="/iconNew.svg"
         alt="Logo"
-        className="absolute top-8 left-6 transform -translate-x-1/2 -translate-y-1/2 md:w-[1000px] md:h-auto lg:w-[1200px] lg:h-auto z-0 pointer-events-none"
+        className="absolute top-8 left-6 transform -translate-x-1/2 -translate-y-1/2 md:w-[900px] md:h-auto lg:w-[900px] lg:h-auto z-0 pointer-events-none"
       />
       <div className="relative z-10 flex flex-col items-center justify-center h-screen p-4 sm:p-8 md:p-10">
         <h1 className="text-center font-bold mb-4 text-4xl">Create Account</h1>
@@ -84,7 +84,7 @@ export default function CreateAccount() {
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value.trim().toLowerCase())} // Format on input
-            className="w-full p-3 placeholder-achieve-grey border bg-achieve-bluepurple border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 placeholder-achieve-grey border border-achieve-bluepurple rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -149,7 +149,7 @@ export default function CreateAccount() {
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value.trim())} // Trim spaces
-            className="w-full p-3 placeholder-achieve-grey border bg-achieve-orange border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 placeholder-achieve-grey border border-achieve-pink  rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -174,9 +174,9 @@ export default function CreateAccount() {
         </Link>
       </div>
       <img
-        src="/icon.svg"
+        src="/iconNew.svg"
         alt="Logo"
-        className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 md:w-[800px] md:h-100 lg:w-[1000px] lg:h-100 z-0 pointer-events-none"
+        className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 md:w-[600px] md:h-100 lg:w-[900px] lg:h-100 z-0 pointer-events-none"
       />
     </div>
   );
