@@ -3,7 +3,7 @@ import prisma from '@/database/client'; // Correct import path for prisma
 
 // Handle POST requests
 export async function POST(req) {
-  const { email, password } = await req.json(); // Parse the request body
+  const { email, password } = await req.json(); 
 
   const existingUser = await prisma.user.findUnique({
     where: { email },
