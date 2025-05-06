@@ -10,7 +10,7 @@ export default function WelcomePage() {
       />
         <div className="relative h-screen flex flex-col items-center justify-center p-10"> 
         <h1 className="text-center font-bold mb-4 sm:w-[300px]  md:text-4xl md:w-[500px] break-words">
-        Your health is your greatest investment—track it, nurture it, <span className="text-achieve-darkgreen">achieve it</span>
+        Your health is your greatest investment—track it, nurture it, <span className="font-extrabold italic">achieve it</span>
       </h1>
       <div className="text-center pt-20 md:text-2xl z-10">
       <Link href="/authen/login">

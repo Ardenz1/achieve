@@ -89,8 +89,8 @@ export default function Profile() {
     const trimmedNewPassword = newPassword.trim();
 
     // Validate password length
-    if (trimmedNewPassword.length < 8) {
-      setErrorMessage("New password must be at least 8 characters long.");
+    if (trimmedNewPassword.length < 6) {
+      setErrorMessage("New password must be at least 6 characters long.");
       return;
     }
 

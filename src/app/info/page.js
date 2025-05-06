@@ -17,7 +17,9 @@ export default function Info() {
         <p>The calculations are straightforward: <br></br> (Amount / Serving Size) × Calories, Protein, Fat, etc. <br></br> This helps provide a clear breakdown of your daily intake based on the portions you consume.</p>
        <br></br> <p> If you only want to track one of the nutrients like protien, simply enter amount consumed and serving size, plus the nutrient you want to track. </p>
         <h4 className="font-bold text-xl mt-10">Sources</h4>
-        <p>*https://www.dietaryguidelines.gov/</p>
+        <Link className="hover:text-achieve-orange" href="https://www.dietaryguidelines.gov/" target="_blank">    
+         <p>*https://www.dietaryguidelines.gov/</p></Link>
+     
         </div>
       
       </div>
